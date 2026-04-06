@@ -8,13 +8,15 @@ Original file is located at
 
 # Ray Tracing in 15 minutes
 
-Ray Tracing is one of the most interesting Computer Graphics algorithms out there, used in tons of games as a default now. It was, for a long time, considered to be too slow compared to traditional methods like rasterization and scanline rendering. But with the advent of Graphics Processing Units (GPUs) and tensor programming, it became accessible to millions of developers.
+Ray Tracing is one of the most interesting Computer Graphics algorithms out there, used in [tons of games](https://www.corsair.com/us/en/explorer/gamer/gaming-pcs/what-is-ray-tracing-in-games/) as a default now. It was, for a long time, considered to be too slow compared to traditional methods like [rasterization](https://blogs.nvidia.com/blog/whats-difference-between-ray-tracing-rasterization/) and [scanline rendering](https://hackaday.io/project/11815-quicksilver-neo-open-source-gpu/log/38395-chasing-the-scanline). But with the advent of Graphics Processing Units (GPUs) and tensor programming, it became accessible to millions of developers.
 
 
-In this notebook, I'm going to try and explain how you can go from zero to a basic understanding of what's going on under the hood. This is only meant to be an introduction and does not cover next steps like Reflections, Shadows etc. (yet), but it does cover integral topics like Phong Shading. It is also mostly light on math, but will play on giving you an intuition.
+In this notebook, I'm going to try and explain how you can go from zero to a basic understanding of what's going on under the hood. This is only meant to be an *introduction* and does not cover next steps like Reflections, Shadows etc. (yet), but it does cover integral topics like Phong Shading. It is also mostly light on math, but will play on giving you an intuition. The diag
 
 
 This is implemented with PyTorch, and can be similarly implemented in NumPy or other simpler numerical computing platforms with the same principles in place.
+
+<img src = 'https://drive.google.com/uc?id=1s6qMF0k755WGVp8UuFnzta-ctjBqqssB'>
 
 (created by [Suvaditya Mukherjee](https://suvadityamuk.com))
 
@@ -38,6 +40,7 @@ def get_device():
         device = torch.device('mps')
     else:
         device = torch.device('cpu')
+    print(f"Using device: {device}")
     return device
 
 device = get_device()
@@ -63,6 +66,7 @@ frame_height = 512
 frame_width = 512
 fov = math.radians(60)
 
+# Try playing around with this by moving it along -z axis!
 camera_loc = torch.tensor([0.0, 0.0, -1.0], device=device)
 
 sphere_loc = torch.tensor([0.0, 0.0, -4.0], device=device)
@@ -83,7 +87,7 @@ specular_component = 0.6
 
 Here, we're gonna create a quick way to reference/index our camera plane, but we do so by creating a `torch.meshgrid` that yields lists of numbers that we can use to index specific pixel points and/or full rows or columns or their combinations easily.
 
-<img src = 'https://drive.google.com/uc?id=1cgAMMQh6A2yAzJhLSpf8GpOIhuYepPUL'>
+<img src = 'https://drive.google.com/uc?id=1ppvmzRvJkKqWc_gCR2l1actiB9eOFNtO'>
 """
 
 xs, ys = torch.meshgrid(
@@ -253,7 +257,10 @@ Given each shade, we then mix them together in a desired proportion (where all t
 
 shading = ambient_component + diffuse * diffuse_component
 
-"""# Step 10 - Render Image and Save"""
+"""# Step 10 - Render Image and Save
+
+There we go! We have our shading ops ready, and now we're going to apply it to get the final image.
+"""
 
 # If you want to render a black background, use this
 

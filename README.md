@@ -11,6 +11,8 @@ It is meant to be approachable rather than exhaustive, and is a nice starting po
 - `ray_tracing.py` — a standalone Python script that renders a shaded sphere
 - `PyTorch_Ray_Tracing.ipynb` — the notebook version with step-by-step explanations
 
+Run this notebook on [Google Colab here](https://colab.research.google.com/drive/1BcDNndy7wgRxqkQF5XTxVGVVt3RX4MA4)
+
 ## What it covers
 
 - scene setup
